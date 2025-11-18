@@ -3,6 +3,7 @@ package com.talosi.superfight.dto;
 import com.talosi.superfight.model.GenderEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@Builder
 @Schema(description = "Player for superfight game")
 public class PlayerDto {
 

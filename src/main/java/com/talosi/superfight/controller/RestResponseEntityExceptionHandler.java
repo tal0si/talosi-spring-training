@@ -1,7 +1,7 @@
 package com.talosi.superfight.controller;
 
-import com.talosi.superfight.utils.exception.HttpRequestException;
-import com.talosi.superfight.utils.exception.dto.ErrorDto;
+import com.talosi.superfight.exception.HttpRequestException;
+import com.talosi.superfight.exception.dto.ErrorDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
