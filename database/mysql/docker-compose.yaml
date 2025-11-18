@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    container_name: training-spring-mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: superfight
+      MYSQL_USER: postgres
+      MYSQL_PASSWORD: changeme
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: training-spring-phpMyAdmin_container
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8091:80
+volumes:
+  dbdata:

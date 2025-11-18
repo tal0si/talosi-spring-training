@@ -1,47 +1,52 @@
 package com.talosi.superfight.service;
 
-import com.talosi.superfight.model.GenderEnum;
-import com.talosi.superfight.model.Player;
-import com.talosi.superfight.utils.exception.NotFoundException;
+import com.talosi.superfight.dto.PlayerDto;
+import com.talosi.superfight.exception.HttpRequestException;
+import com.talosi.superfight.mapper.PlayerMapper;
+import com.talosi.superfight.repository.PlayerRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class PlayerService {
-    HashMap<Integer, Player> players = new HashMap<>();
+    private PlayerRepository playerRepository;
+    private PlayerMapper playerMapper;
 
-    public Collection<Player> getAll() {
-        return players.values();
+    public Collection<PlayerDto> getAll() {
+        return playerMapper.mapToDto(playerRepository.findAll());
     }
 
-    public Player get(int id) {
-        checkId(id);
-        return players.get(id);
+    public PlayerDto get(UUID id) {
+        return
+                playerMapper.map(playerRepository.findById(id)
+                .orElse(null)
+                );
     }
 
-    public Player create(Player player) {
-        players.put(player.getId(), player);
-        return player;
-    }
-
-    public void delete(int id) {
-        checkId(id);
-        players.remove(id);
-    }
-
-    private void checkId(int id) {
-        if(id < 0) {
-            throw new NotFoundException("player " + id + " not found");
+    public PlayerDto create(PlayerDto player) {
+        if(playerRepository.findByAlias(player.getAlias()).isPresent()) {
+            throw new HttpRequestException(HttpStatus.CONFLICT, "Player already exists");
         }
+        return playerMapper.map(playerRepository.save(
+                playerMapper.map(player))
+        );
     }
 
-    public Player update(int id, Player player) {
-        checkId(player.getId());
-        players.put(player.getId(), player);
-        return player;
+    public void delete(UUID id) {
+        this.get(id); // to check if exists
+        playerRepository.deleteById(id);
+    }
+
+    public PlayerDto update(UUID id, PlayerDto player) {
+        this.get(id); // to check if exists
+        player.setId(id);
+
+        return playerMapper.map(playerRepository.save(
+                playerMapper.map(player)
+        ));
     }
 }
