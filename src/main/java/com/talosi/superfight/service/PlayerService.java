@@ -27,6 +27,14 @@ public class PlayerService {
                 );
     }
 
+    public PlayerDto getByAlias(String alias) {
+        return
+                playerMapper.map(
+                        playerRepository.findByAlias(alias)
+                                        .orElseThrow(() -> new HttpRequestException(HttpStatus.NOT_FOUND, "Player not found"))
+                );
+    }
+
     public PlayerDto create(PlayerDto player) {
         if(playerRepository.findByAlias(player.getAlias()).isPresent()) {
             throw new HttpRequestException(HttpStatus.CONFLICT, "Player already exists");

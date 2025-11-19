@@ -65,4 +65,12 @@ public class TeamService {
         ));
     }
 
+    public TeamDto getByName(String name) {
+        TeamEntity teamEntity = teamRepository.findByName(name);
+        if(teamEntity == null) {
+            throw new NotFoundException("No Team found with name " + name);
+        }
+        return teamMapper.map(teamEntity);
+    }
+
 }

@@ -19,6 +19,8 @@ public class TeamDto {
     @Schema(description = "Team name")
     private String name;
 
+    private Double power;
+
     @Schema(description = "Team members")
     private List<PlayerDto> teamMembers;
 
