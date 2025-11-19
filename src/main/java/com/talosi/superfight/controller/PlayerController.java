@@ -3,6 +3,7 @@ package com.talosi.superfight.controller;
 import com.talosi.superfight.dto.PlayerDto;
 import com.talosi.superfight.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class PlayerController {
 
     @PutMapping()
     @Operation(description = "create a player")
-    public PlayerDto create(@RequestBody PlayerDto player) {
+    public PlayerDto create(@Parameter(description = "player to create")  @RequestBody PlayerDto player) {
         return playerService.create(player);
     }
 
