@@ -7,7 +7,7 @@ public class ApiKeyAuthenticationToken extends org.springframework.security.auth
     private final String apiKey;
 
     public ApiKeyAuthenticationToken(String apiKey) {
-        super(null);
+        super(AuthorityUtils.NO_AUTHORITIES);
         this.apiKey = apiKey;
         setAuthenticated(false);
     }
