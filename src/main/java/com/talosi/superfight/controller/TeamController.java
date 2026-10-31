@@ -34,7 +34,7 @@ public class TeamController {
     }
 
     @Operation(description = "create a team")
-    @PutMapping()
+    @PostMapping
     public TeamDto create(@RequestBody TeamDto team) {
         return teamService.create(team);
     }
