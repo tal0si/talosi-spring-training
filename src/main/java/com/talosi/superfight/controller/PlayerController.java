@@ -26,7 +26,7 @@ public class PlayerController {
         return playerService.get(id);
     }
 
-    @PutMapping()
+    @PostMapping
     public Player create(@RequestBody Player player) {
         return playerService.create(player);
     }
