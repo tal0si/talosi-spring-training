@@ -3,6 +3,7 @@ package com.talosi.superfight.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Entity
 @Table
 @NoArgsConstructor
+@Builder
 public class PlayerEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private String lastname;

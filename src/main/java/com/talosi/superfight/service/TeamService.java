@@ -1,12 +1,12 @@
 package com.talosi.superfight.service;
 
 import com.talosi.superfight.dto.TeamDto;
+import com.talosi.superfight.exception.HttpRequestException;
+import com.talosi.superfight.exception.NotFoundException;
 import com.talosi.superfight.mapper.TeamMapper;
 import com.talosi.superfight.model.TeamEntity;
 import com.talosi.superfight.repository.PlayerRepository;
 import com.talosi.superfight.repository.TeamRepository;
-import com.talosi.superfight.utils.exception.HttpRequestException;
-import com.talosi.superfight.utils.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

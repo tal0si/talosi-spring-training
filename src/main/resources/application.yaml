@@ -1,20 +1,16 @@
-spring.application.name: spring
-
-server:
-  port: 9090
-
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+  application:
+    name: spring
   datasource:
-    url: jdbc:postgresql://localhost:5432/superfight
-    username: postgres
-    password: changeme
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:5432/${DATABASE_NAME:superfight}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:changeme}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
-        hibernate:
-          show_sql: true
+      hibernate:
+        show_sql: true
+
+server:
+  port: 9090
