@@ -30,13 +30,6 @@ public class PlayerEntity {
     private String dimension;
     private int power;
 
-    @ManyToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "team_player",
-            joinColumns = @JoinColumn(name = "player_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id")
-    )
+    @ManyToMany(mappedBy = "teamMembers", fetch = FetchType.EAGER)
     List<TeamEntity> teams = new ArrayList<>();
 }
