@@ -8,6 +8,7 @@ import com.talosi.superfight.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -45,9 +46,13 @@ public class PlayerService {
         );
     }
 
+    @Transactional
     public void delete(UUID id) {
-        this.get(id); // to check if exists
-        playerRepository.deleteById(id);
+        var player = playerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No Player found with id " + id));
+        player.getTeams().forEach(team ->
+                team.getTeamMembers().removeIf(member -> id.equals(member.getId())));
+        playerRepository.delete(player);
     }
 
     public PlayerDto update(UUID id, PlayerDto player) {
