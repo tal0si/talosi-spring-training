@@ -36,7 +36,7 @@ public class PlayerController {
         return playerService.get(id);
     }
 
-    @PutMapping()
+    @PostMapping
     @Operation(description = "create a player")
     public PlayerDto create(@Parameter(description = "player to create")  @RequestBody PlayerDto player) {
         return playerService.create(player);
