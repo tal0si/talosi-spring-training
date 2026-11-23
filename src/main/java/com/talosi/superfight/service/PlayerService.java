@@ -2,6 +2,7 @@ package com.talosi.superfight.service;
 
 import com.talosi.superfight.dto.PlayerDto;
 import com.talosi.superfight.exception.HttpRequestException;
+import com.talosi.superfight.exception.NotFoundException;
 import com.talosi.superfight.mapper.PlayerMapper;
 import com.talosi.superfight.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class PlayerService {
     public PlayerDto get(UUID id) {
         return
                 playerMapper.map(playerRepository.findById(id)
-                .orElse(null)
+                .orElseThrow(() -> new NotFoundException("No Player found with id " + id))
                 );
     }
 

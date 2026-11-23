@@ -39,4 +39,17 @@ public class TeamController {
         return teamService.create(team);
     }
 
+    @Operation(description = "update a team")
+    @PutMapping("/{id}")
+    public TeamDto update(@PathVariable("id") UUID id, @RequestBody TeamDto team) {
+        return teamService.update(id, team);
+    }
+
+    @Operation(description = "delete a team")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
+        teamService.delete(id);
+        return ResponseEntity.ok("team well deleted");
+    }
+
 }
