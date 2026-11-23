@@ -128,4 +128,47 @@ class CrudIntegrationTest {
                 .andExpect(status().isOk());
         mvc.perform(get("/teams/{id}", team.getId())).andExpect(status().isNotFound());
     }
+
+    @Test
+    void deletingTeamPreservesSharedPlayerAndOtherTeam() throws Exception {
+        PlayerEntity player = new PlayerEntity();
+        player.setAlias("shared-" + UUID.randomUUID());
+        UUID playerId = players.saveAndFlush(player).getId();
+        UUID[] teamIds = transactions.execute(status -> {
+            PlayerEntity member = players.findById(playerId).orElseThrow();
+            TeamEntity first = new TeamEntity();
+            first.setName("First");
+            first.getTeamMembers().add(member);
+            TeamEntity second = new TeamEntity();
+            second.setName("Second");
+            second.getTeamMembers().add(member);
+            return new UUID[]{teams.saveAndFlush(first).getId(), teams.saveAndFlush(second).getId()};
+        });
+
+        mvc.perform(delete("/teams/{id}", teamIds[0]).header("x-api-key", "crud-test-key"))
+                .andExpect(status().isOk());
+        assertThat(players.existsById(playerId)).isTrue();
+        mvc.perform(get("/teams/{id}", teamIds[1]))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamMembers[0].id").value(playerId.toString()));
+    }
+
+    @Test
+    void deletingPlayerPreservesTeam() throws Exception {
+        PlayerEntity player = new PlayerEntity();
+        player.setAlias("member-" + UUID.randomUUID());
+        UUID playerId = players.saveAndFlush(player).getId();
+        UUID teamId = transactions.execute(status -> {
+            TeamEntity team = new TeamEntity();
+            team.setName("Team");
+            team.getTeamMembers().add(players.findById(playerId).orElseThrow());
+            return teams.saveAndFlush(team).getId();
+        });
+
+        mvc.perform(delete("/players/{id}", playerId).header("x-api-key", "crud-test-key"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/teams/{id}", teamId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamMembers.length()").value(0));
+    }
 }
