@@ -1,7 +1,7 @@
 package com.talosi.superfight.controller;
 
-import com.talosi.superfight.utils.exception.HttpRequestException;
-import com.talosi.superfight.utils.exception.dto.ErrorDto;
+import com.talosi.superfight.exception.HttpRequestException;
+import com.talosi.superfight.exception.dto.ErrorDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
+        logger.error(ex.getMessage(), ex);
         return handleExceptionInternal(ex,
                 ErrorDto.builder()
                         .errorMessage("An error occurred")
