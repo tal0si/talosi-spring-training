@@ -18,9 +18,7 @@ public class TeamEntity {
 
     private String name;
 
-    @ManyToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "team_player",
             joinColumns = @JoinColumn(name = "team_id"),
