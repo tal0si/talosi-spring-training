@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -151,6 +152,22 @@ class CrudIntegrationTest {
         mvc.perform(get("/teams/{id}", teamIds[1]))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.teamMembers[0].id").value(playerId.toString()));
+    }
+
+    @Test
+    void creatingTeamReusesExistingPlayer() throws Exception {
+        PlayerEntity player = new PlayerEntity();
+        player.setAlias("create-member-" + UUID.randomUUID());
+        player.setName("Original");
+        player = players.saveAndFlush(player);
+        String body = "{\"name\":\"team-" + UUID.randomUUID()
+                + "\",\"teamMembers\":[{\"alias\":\"" + player.getAlias() + "\",\"power\":0}]}";
+
+        mvc.perform(post("/teams").header("x-api-key", "crud-test-key")
+                .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamMembers[0].id").value(player.getId().toString()));
+        assertThat(players.findById(player.getId()).orElseThrow().getName()).isEqualTo("Original");
     }
 
     @Test
