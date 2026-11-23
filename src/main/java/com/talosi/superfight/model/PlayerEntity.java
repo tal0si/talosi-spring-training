@@ -21,8 +21,7 @@ import java.util.UUID;
 public class PlayerEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private String lastname;

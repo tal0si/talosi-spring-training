@@ -7,39 +7,35 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class APIKeyAuthFilter extends AbstractAuthenticationProcessingFilter {
+public class APIKeyAuthFilter extends OncePerRequestFilter {
 
-    private String apiKeyHeaderName;
+    private final AuthenticationManager authenticationManager;
+    private final String apiKeyHeaderName;
 
     public APIKeyAuthFilter(AuthenticationManager authenticationManager, String apiKeyHeaderName) {
-        super("/**");
-        this.setAuthenticationManager(authenticationManager);
+        this.authenticationManager = authenticationManager;
         this.apiKeyHeaderName = apiKeyHeaderName;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        Optional<String> apiKeyOptional = Optional.ofNullable(request.getHeader(apiKeyHeaderName));
-        ApiKeyAuthenticationToken token =
-                apiKeyOptional.map(ApiKeyAuthenticationToken::new).orElse(new ApiKeyAuthenticationToken());
-        return this.getAuthenticationManager().authenticate(token);
-    }
-
-    @Override
-    protected void successfulAuthentication(
+    protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain,
-            Authentication authResult)
-            throws IOException, ServletException {
+            FilterChain filterChain)
+            throws ServletException, IOException {
 
-        SecurityContextHolder.getContext().setAuthentication(authResult);
-        chain.doFilter(request, response);
+        Optional<String> apiKeyOptional = Optional.ofNullable(request.getHeader(apiKeyHeaderName));
+        if (apiKeyOptional.isPresent()) {
+            ApiKeyAuthenticationToken token = new ApiKeyAuthenticationToken(apiKeyOptional.get());
+            Authentication authResult = this.authenticationManager.authenticate(token);
+            SecurityContextHolder.getContext().setAuthentication(authResult);
+        }
+        filterChain.doFilter(request, response);
     }
 
 }
