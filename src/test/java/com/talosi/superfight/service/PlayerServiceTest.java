@@ -3,6 +3,7 @@ package com.talosi.superfight.service;
 import com.talosi.superfight.dto.PlayerDto;
 import com.talosi.superfight.exception.HttpRequestException;
 import com.talosi.superfight.mapper.PlayerMapper;
+import com.talosi.superfight.mapper.PlayerMapperImpl;
 import com.talosi.superfight.model.GenderEnum;
 import com.talosi.superfight.model.PlayerEntity;
 import com.talosi.superfight.repository.PlayerRepository;
@@ -19,9 +20,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
+@SpringBootTest(classes = {PlayerService.class, PlayerMapperImpl.class})
 public class PlayerServiceTest {
 
 
