@@ -1,7 +1,9 @@
 package com.talosi.superfight.service;
 
+import com.talosi.superfight.exception.HttpRequestException;
 import com.talosi.superfight.exception.NotFoundException;
 import com.talosi.superfight.model.Player;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -21,6 +23,9 @@ public class PlayerService {
     }
 
     public Player create(Player player) {
+        if (players.containsKey(player.getId())) {
+            throw new HttpRequestException(HttpStatus.CONFLICT, "player " + player.getId() + " already exists");
+        }
         players.put(player.getId(), player);
         return player;
     }
@@ -31,14 +36,15 @@ public class PlayerService {
     }
 
     private void checkId(int id) {
-        if(id < 0) {
+        if (id < 0 || !players.containsKey(id)) {
             throw new NotFoundException("player " + id + " not found");
         }
     }
 
     public Player update(int id, Player player) {
-        checkId(player.getId());
-        players.put(player.getId(), player);
+        checkId(id);
+        player.setId(id);
+        players.put(id, player);
         return player;
     }
 }
