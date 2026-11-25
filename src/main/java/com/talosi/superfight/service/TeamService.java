@@ -2,6 +2,7 @@ package com.talosi.superfight.service;
 
 import com.talosi.superfight.dto.TeamDto;
 import com.talosi.superfight.mapper.TeamMapper;
+import com.talosi.superfight.model.PlayerEntity;
 import com.talosi.superfight.model.TeamEntity;
 import com.talosi.superfight.repository.PlayerRepository;
 import com.talosi.superfight.repository.TeamRepository;
@@ -10,6 +11,7 @@ import com.talosi.superfight.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,13 +58,18 @@ public class TeamService {
         teamRepository.deleteById(id);
     }
 
+    @Transactional
     public TeamDto update(UUID id, TeamDto team) {
-        this.get(id); // to check if exists
-        team.setId(id);
-
-        return teamMapper.map(teamRepository.save(
-                teamMapper.map(team)
-        ));
+        TeamEntity existing = teamRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No Team found with id " + id));
+        List<PlayerEntity> members = team.getTeamMembers().stream()
+                .map(member -> playerRepository.findByAlias(member.getAlias())
+                        .orElseThrow(() -> new NotFoundException("No Player found with alias " + member.getAlias())))
+                .toList();
+        existing.setName(team.getName());
+        existing.getTeamMembers().clear();
+        existing.getTeamMembers().addAll(members);
+        return teamMapper.map(teamRepository.save(existing));
     }
 
     public TeamDto getByName(String name) {
