@@ -76,6 +76,8 @@ toutes les routes de l'application : utilisez uniquement des données fictives,
 respectez les règles de votre organisation et gardez `APIKEY` secret.
 
 Le code reprend la solution pédagogique dans `com.talosi.superfight.arena`.
+Une chaîne Spring Security dédiée vérifie `X-Arena-Token` sur les deux callbacks,
+indépendamment de la clé API utilisée pour les autres écritures.
 Sans profil `arena-demo`, l'inscription est désactivée par défaut. Pour
 réutiliser une base existante, activer `ARENA_ENABLED=true` et configurer
 `ARENA_URL`, `ARENA_CALLBACK_URL`, `ARENA_PLAYER_ID` ou `ARENA_PLAYER_ALIAS`,
