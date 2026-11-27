@@ -25,6 +25,7 @@ public class ApikeyConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/arena/turn").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new APIKeyAuthFilter(authenticationManager, "x-api-key"), X509AuthenticationFilter.class);
