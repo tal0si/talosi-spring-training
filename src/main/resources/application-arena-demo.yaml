@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:superfight;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: false
+
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+
+apikey: ${APIKEY}
+
+arena:
+  enabled: true
+  url: ${ARENA_URL:http://127.0.0.1:8090}
+  callback-url: ${ARENA_CALLBACK_URL:http://127.0.0.1:9090}
+  player-alias: ${ARENA_PLAYER_ALIAS:ArenaBot}
+  player-power: ${ARENA_PLAYER_POWER:60}
+  join-code: ${ARENA_JOIN_CODE:}
