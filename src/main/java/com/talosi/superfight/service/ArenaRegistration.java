@@ -1,4 +1,4 @@
-package com.talosi.superfight.arena;
+package com.talosi.superfight.service;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
@@ -15,11 +15,11 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import com.talosi.superfight.arena.ArenaDtos.PingResult;
-import com.talosi.superfight.arena.ArenaDtos.Register;
-import com.talosi.superfight.arena.ArenaDtos.Registered;
+import com.talosi.superfight.configuration.ArenaCredentials;
+import com.talosi.superfight.dto.ArenaPingResult;
+import com.talosi.superfight.dto.ArenaRegisterRequest;
+import com.talosi.superfight.dto.ArenaRegisterResponse;
 import com.talosi.superfight.dto.PlayerDto;
-import com.talosi.superfight.service.PlayerService;
 
 @Component
 @ConditionalOnProperty(name = "arena.enabled", havingValue = "true")
@@ -58,20 +58,20 @@ public class ArenaRegistration {
         try {
             PlayerDto player = playerId.isBlank()
                     ? players.getByAlias(playerAlias) : players.get(UUID.fromString(playerId));
-            Register request = new Register(player.getAlias(), player.getLastname(),
+            ArenaRegisterRequest request = new ArenaRegisterRequest(player.getAlias(), player.getLastname(),
                     player.getName(), player.getPower(), callbackUrl);
-            Registered response = client.post().uri("/api/participants")
+            ArenaRegisterResponse response = client.post().uri("/api/participants")
                     .contentType(MediaType.APPLICATION_JSON)
                     .headers(h -> {
                         if (!joinCode.isBlank()) h.set("X-Join-Code", joinCode);
                     })
-                    .body(request).retrieve().body(Registered.class);
-            if (response == null || response.token() == null || response.token().isBlank()
-                    || response.arenaCallToken() == null || response.arenaCallToken().isBlank()) {
+                    .body(request).retrieve().body(ArenaRegisterResponse.class);
+            if (response == null || response.getToken() == null || response.getToken().isBlank()
+                    || response.getArenaCallToken() == null || response.getArenaCallToken().isBlank()) {
                 throw new IllegalStateException("Réponse d'inscription incomplète");
             }
-            bearerToken = response.token();
-            credentials.install(response.arenaCallToken());
+            bearerToken = response.getToken();
+            credentials.install(response.getArenaCallToken());
             LOG.info("Inscription à l'arène réussie pour {}.", player.getAlias());
         } catch (RuntimeException e) {
             LOG.error("Inscription échouée ou incertaine ({}) ; contactez le formateur.",
@@ -79,9 +79,9 @@ public class ArenaRegistration {
             return;
         }
         try {
-            PingResult ping = client.post().uri("/api/me/ping")
-                    .headers(h -> h.setBearerAuth(bearerToken)).retrieve().body(PingResult.class);
-            if (ping != null && ping.reachable()) {
+            ArenaPingResult ping = client.post().uri("/api/me/ping")
+                    .headers(h -> h.setBearerAuth(bearerToken)).retrieve().body(ArenaPingResult.class);
+            if (ping != null && ping.isReachable()) {
                 LOG.info("Ping arène réussi.");
             } else {
                 LOG.warn("Ping arène échoué ; vérifiez réseau et callback.");

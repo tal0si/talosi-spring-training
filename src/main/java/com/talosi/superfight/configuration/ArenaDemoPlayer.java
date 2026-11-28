@@ -1,4 +1,4 @@
-package com.talosi.superfight.arena;
+package com.talosi.superfight.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

@@ -1,4 +1,4 @@
-package com.talosi.superfight.arena;
+package com.talosi.superfight.configuration;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

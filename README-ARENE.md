@@ -70,12 +70,15 @@ autres écritures de chaque application.
 
 En LAN, adaptez l'interface et `ARENA_CALLBACK_URL` à l'IPv4 du poste et aux
 plages autorisées par l'arène. L'HTTP LAN transporte les secrets en clair ;
-utilisez un réseau de formation fiable. Un tunnel Quick Tunnel peut également
-fournir une URL HTTPS de callback `*.trycloudflare.com`. Un tunnel expose
+utilisez un réseau de formation fiable. Un tunnel ngrok gratuit peut également
+fournir une URL HTTPS de callback `*.ngrok-free.app` ou `*.ngrok-free.dev`
+(Cloudflare `*.trycloudflare.com` reste accepté). Un tunnel expose
 toutes les routes de l'application : utilisez uniquement des données fictives,
 respectez les règles de votre organisation et gardez `APIKEY` secret.
 
-Le code reprend la solution pédagogique dans `com.talosi.superfight.arena`.
+Le contrôleur se trouve dans `controller`, la stratégie et l'inscription dans
+`service`, les objets du contrat dans `dto`, et la sécurité dans
+`configuration`. Les DTO sont des classes Java ordinaires.
 Une chaîne Spring Security dédiée vérifie `X-Arena-Token` sur les deux callbacks,
 indépendamment de la clé API utilisée pour les autres écritures.
 Sans profil `arena-demo`, l'inscription est désactivée par défaut. Pour

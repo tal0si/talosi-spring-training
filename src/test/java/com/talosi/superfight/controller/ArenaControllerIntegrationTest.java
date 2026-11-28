@@ -1,4 +1,4 @@
-package com.talosi.superfight.arena;
+package com.talosi.superfight.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.talosi.superfight.configuration.ArenaCredentials;
 import com.talosi.superfight.service.PlayerService;
 
 @SpringBootTest(properties = {"arena.enabled=false", "apikey=arena-test-key"})

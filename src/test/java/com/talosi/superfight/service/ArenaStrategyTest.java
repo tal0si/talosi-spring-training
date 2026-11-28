@@ -1,4 +1,4 @@
-package com.talosi.superfight.arena;
+package com.talosi.superfight.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,16 +6,17 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.talosi.superfight.arena.ArenaDtos.Fighter;
-import com.talosi.superfight.arena.ArenaDtos.Turn;
+import com.talosi.superfight.configuration.ArenaCredentials;
+import com.talosi.superfight.dto.ArenaFighter;
+import com.talosi.superfight.dto.ArenaTurn;
 
 class ArenaStrategyTest {
     private final ArenaStrategy strategy = new ArenaStrategy();
 
-    private Turn turn(String fightId, int round, boolean reverse, int opponentCharge) {
-        Fighter self = new Fighter("a", "A", 60, 140, 140, 0, 17);
-        Fighter opponent = new Fighter("b", "B", 50, 150, 150, opponentCharge, 15);
-        return new Turn("t1", fightId, round, 30, null, 2000,
+    private ArenaTurn turn(String fightId, int round, boolean reverse, int opponentCharge) {
+        ArenaFighter self = new ArenaFighter("a", "A", 60, 140, 140, 0, 17);
+        ArenaFighter opponent = new ArenaFighter("b", "B", 50, 150, 150, opponentCharge, 15);
+        return new ArenaTurn("t1", fightId, round, 30, null, 2000,
                 reverse ? opponent : self, reverse ? self : opponent, List.of());
     }
 
